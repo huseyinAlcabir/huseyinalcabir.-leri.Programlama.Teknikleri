@@ -22,10 +22,6 @@ const flags = [
   { country: "Yemen", url: "https://upload.wikimedia.org/wikipedia/commons/8/89/Flag_of_Yemen.svg" }
 ];
 
-
-
-
-
 let currentFlagIndex = 0;
 let score = 0;
 let timeRemaining = 30;
