@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guess the Flag Quiz</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="quiz-container">
+    <h1>Guess the Flag</h1>
+  
+    <div id="score-container">Score: <span id="score">0</span></div>
+    <div id="timer-container">Time Remaining: <span id="question-time-remaining">30</span>s</div>
+    <div id="flag-container"></div>
+    <div id="options-container"></div>
+    <div id="hint-container"></div>
+    <button id="hint-button">Get Hint</button>
+    <button id="remove-two-button" style="display: none;"> Delete two answers </button>
+
+    
+
+    <!-- Modal -->
+    <div id="modal" style="display: none;">
+      <div id="modal-message"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
