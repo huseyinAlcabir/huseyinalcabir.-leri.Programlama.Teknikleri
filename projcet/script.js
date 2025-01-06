@@ -1,11 +1,13 @@
 const flags = [
-  { country: "Turkey", url:"https://upload.wikimedia.org/wikipedia/commons/8/8e/Flag_of_the_Ottoman_Empire_%281844%E2%80%931922%29.svg" },
+  { country: "Turkey", url: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Flag_of_the_Ottoman_Empire_%281844%E2%80%931922%29.svg" },
+  { country: "Qatar", url: "https://upload.wikimedia.org/wikipedia/commons/6/65/Flag_of_Qatar.svg" },
+  { country: "Somalia", url: "https://upload.wikimedia.org/wikipedia/commons/a/a0/Flag_of_Somalia.svg" },
+    { country: "Mexico", url: "https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg" },
   { country: "Syria", url: "https://upload.wikimedia.org/wikipedia/commons/1/14/Flag_of_the_Syrian_revolution.svg" },
   { country: "Saudi Arabia", url: "https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" },
   { country: "Brazil", url: "https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg" },
   { country: "Algeria", url: "https://upload.wikimedia.org/wikipedia/commons/7/77/Flag_of_Algeria.svg" },
-  { country: "Qatar", url: "https://upload.wikimedia.org/wikipedia/commons/6/65/Flag_of_Qatar.svg" },
-  { country: "France", url: "https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg" },
+   { country: "France", url: "https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg" },
   { country: "Iraq", url: "https://upload.wikimedia.org/wikipedia/commons/f/f6/Flag_of_Iraq.svg" },
   { country: "Canada", url: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Canada.svg" },
   { country: "Sudan", url: "https://upload.wikimedia.org/wikipedia/commons/0/01/Flag_of_Sudan.svg" },
@@ -14,10 +16,8 @@ const flags = [
   { country: "United States", url: "https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" },
   { country: "Oman", url: "https://upload.wikimedia.org/wikipedia/commons/d/dd/Flag_of_Oman.svg" },
   { country: "Italy", url: "https://upload.wikimedia.org/wikipedia/commons/0/03/Flag_of_Italy.svg" },
-  { country: "Mexico", url: "https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg" },
   { country: "Morocco", url: "https://upload.wikimedia.org/wikipedia/commons/2/2c/Flag_of_Morocco.svg" },
   { country: "Russia", url: "https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Russia.svg" },
-  { country: "Somalia", url: "https://upload.wikimedia.org/wikipedia/commons/a/a0/Flag_of_Somalia.svg" },
   { country: "Egypt", url: "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg" },
   { country: "Yemen", url: "https://upload.wikimedia.org/wikipedia/commons/8/89/Flag_of_Yemen.svg" }
 ];
