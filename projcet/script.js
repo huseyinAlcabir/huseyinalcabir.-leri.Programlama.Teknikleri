@@ -23,7 +23,6 @@ const flags = [
 ];
 
 
- 
 let currentFlagIndex = 0;
 let score = 0;
 let timeRemaining = 30;
