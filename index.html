@@ -9,7 +9,7 @@
       @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
 
       body {
-        background-color: #f0f8ff; /* لون مريح للعين */
+        background-color: #e3f2fd; /* لون خلفية مريح */
         font-family: "Roboto", sans-serif;
         margin: 0;
         display: flex;
@@ -20,12 +20,18 @@
       }
 
       .repo {
-        background: #ffffff; /* خلفية بيضاء لإبراز المحتوى */
+        background: linear-gradient(145deg, #ffffff, #dbe4f3); /* تدرج ألوان جذاب */
         border-radius: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         padding: 30px;
         width: 80%;
         max-width: 600px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .repo:hover {
+        transform: translateY(-10px); /* تأثير رفع عند التمرير */
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
       }
 
       img {
@@ -33,16 +39,22 @@
         height: 120px;
         border-radius: 50%;
         margin-bottom: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      img:hover {
+        transform: scale(1.1); /* تكبير عند التمرير */
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
       }
 
       h1 {
-        color: #333;
+        color: #1e88e5;
         font-size: 2.5em;
         margin-bottom: 10px;
       }
 
       h2 {
-        color: #444;
+        color: #1565c0;
         font-size: 1.8em;
         margin-top: 20px;
       }
@@ -54,7 +66,7 @@
       }
 
       a {
-        color: #007acc;
+        color: #0d47a1;
         text-decoration: none;
         transition: all 0.3s ease;
       }
@@ -63,7 +75,7 @@
         text-decoration: underline;
         font-size: 22px;
         font-weight: bold;
-        color: #005f99;
+        color: #1565c0;
       }
 
       hr {
@@ -85,7 +97,7 @@
   <body>
     <div class="repo">
       <img
-        src="photo_2025-01-06_12-15-19.jpg"
+        src="C:\Users\hussein aljaber\Downloads\photo_2025-01-06_12-16-09.jpg" /* رابط صورة placeholder */
         alt="Profile Picture"
       />
       <b><h1 id="name_id">HÜSEYIN ALCABIR</h1></b>
