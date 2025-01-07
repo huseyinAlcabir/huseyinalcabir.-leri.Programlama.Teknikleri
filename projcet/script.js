@@ -1,13 +1,14 @@
+// تعريف مصفوفة تحتوي على بيانات الأعلام
 const flags = [
   { country: "Turkey", url: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Flag_of_the_Ottoman_Empire_%281844%E2%80%931922%29.svg" },
   { country: "Qatar", url: "https://upload.wikimedia.org/wikipedia/commons/6/65/Flag_of_Qatar.svg" },
   { country: "Somalia", url: "https://upload.wikimedia.org/wikipedia/commons/a/a0/Flag_of_Somalia.svg" },
-    { country: "Mexico", url: "https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg" },
+  { country: "Mexico", url: "https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg" },
   { country: "Syria", url: "https://upload.wikimedia.org/wikipedia/commons/1/14/Flag_of_the_Syrian_revolution.svg" },
   { country: "Saudi Arabia", url: "https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" },
   { country: "Brazil", url: "https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg" },
   { country: "Algeria", url: "https://upload.wikimedia.org/wikipedia/commons/7/77/Flag_of_Algeria.svg" },
-   { country: "France", url: "https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg" },
+  { country: "France", url: "https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg" },
   { country: "Iraq", url: "https://upload.wikimedia.org/wikipedia/commons/f/f6/Flag_of_Iraq.svg" },
   { country: "Canada", url: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Canada.svg" },
   { country: "Sudan", url: "https://upload.wikimedia.org/wikipedia/commons/0/01/Flag_of_Sudan.svg" },
@@ -22,14 +23,16 @@ const flags = [
   { country: "Yemen", url: "https://upload.wikimedia.org/wikipedia/commons/8/89/Flag_of_Yemen.svg" }
 ];
 
-let currentFlagIndex = 0;
-let score = 0;
-let timeRemaining = 30;
-let timer;
-let correctAnswers = 0;
-let incorrectAnswers = 0;
-let startTime;
+// تعريف المتغيرات الأساسية التي ستستخدم في اللعبة
+let currentFlagIndex = 0; // المؤشر الحالي للعلم الذي يتم عرضه
+let score = 0; // عدد النقاط التي حققها اللاعب
+let timeRemaining = 30; // الوقت المتبقي للعبة
+let timer; // المتغير الذي سيحفظ قيمة المؤقت
+let correctAnswers = 0; // عدد الإجابات الصحيحة
+let incorrectAnswers = 0; // عدد الإجابات الخاطئة
+let startTime; // وقت بدء اللعبة
 
+// العناصر التي سيتم التفاعل معها في الـ HTML
 const flagContainer = document.getElementById("flag-container");
 const optionsContainer = document.getElementById("options-container");
 const hintButton = document.getElementById("hint-button");
@@ -38,83 +41,92 @@ const timerDisplay = document.getElementById("question-time-remaining");
 const scoreDisplay = document.getElementById("score");
 const removeTwoButton = document.getElementById("remove-two-button");
 
-let hintUsageCount = 2;
+let hintUsageCount = 2; // عدد مرات استخدام التلميحات المتاحة
 
+// دالة لبدء اللعبة
 function startQuiz() {
   currentFlagIndex = 0;
   score = 0;
   correctAnswers = 0;
   incorrectAnswers = 0;
-  scoreDisplay.textContent = score;
-  removeTwoButton.style.display = "none"; // Hide the remove-two button initially
-  resetTimer();
-  startTime = Date.now();
-  showFlag();
+  scoreDisplay.textContent = score; // عرض النقاط الحالية
+  removeTwoButton.style.display = "none"; // إخفاء زر "إزالة خيارين" في البداية
+  resetTimer(); // إعادة تعيين المؤقت
+  startTime = Date.now(); // حفظ الوقت الحالي كبداية للعبة
+  shuffleFlags(); // خلط الأعلام عشوائيًا
+  showFlag(); // عرض العلم الأول
 }
 
+// دالة لإعادة تعيين المؤقت
 function resetTimer() {
-  clearInterval(timer);
-  timeRemaining = 25;
-  timerDisplay.textContent = timeRemaining;
+  clearInterval(timer); // إيقاف أي مؤقت موجود
+  timeRemaining = 25; // تعيين الوقت المتبقي إلى 25 ثانية
+  timerDisplay.textContent = timeRemaining; // تحديث عرض الوقت المتبقي
 
   timer = setInterval(() => {
-    timeRemaining--;
-    timerDisplay.textContent = timeRemaining;
+    timeRemaining--; // تقليل الوقت المتبقي ثانية تلو الأخرى
+    timerDisplay.textContent = timeRemaining; // تحديث عرض الوقت المتبقي
 
-    if (timeRemaining <= 0) {
-      clearInterval(timer);
-      showEndMessage(); // نهاية اللعبة عند انتهاء الوقت
+    if (timeRemaining <= 0) { // إذا انتهى الوقت
+      clearInterval(timer); // إيقاف المؤقت
+      showEndMessage(); // عرض رسالة النهاية
     }
-  }, 1000);
+  }, 1000); // تكرار كل ثانية
 }
 
+// دالة لخلط الأعلام عشوائيًا
+function shuffleFlags() {
+  // خلط الأعلام عشوائيًا باستخدام دالة sort و Math.random
+  flags.sort(() => Math.random() - 0.5);
+}
+
+// دالة لعرض العلم الحالي مع خيارات الإجابة
 function showFlag() {
-  const flag = flags[currentFlagIndex];
-  flagContainer.innerHTML = `<img src="${flag.url}" alt="Flag">`;
+  const flag = flags[currentFlagIndex]; // الحصول على العلم الحالي
+  flagContainer.innerHTML = `<img src="${flag.url}" alt="Flag">`; // عرض صورة العلم
 
   const randomFlags = [];
   while (randomFlags.length < 4) {
-    const randomIndex = Math.floor(Math.random() * flags.length);
+    const randomIndex = Math.floor(Math.random() * flags.length); // اختيار عشوائي من الأعلام
     const randomFlag = flags[randomIndex];
     if (!randomFlags.includes(randomFlag)) {
-      randomFlags.push(randomFlag);
+      randomFlags.push(randomFlag); // إضافة العلم إذا لم يكن مضافًا من قبل
     }
   }
 
-  const correctOption = flag.country;
-  if (!randomFlags.some(f => f.country === correctOption)) {
-    randomFlags[Math.floor(Math.random() * 4)] = flag;
+  const correctOption = flag.country; // الإجابة الصحيحة هي اسم الدولة
+  if (!randomFlags.some(f => f.country === correctOption)) { // إذا لم تتضمن الخيارات الإجابة الصحيحة
+    randomFlags[Math.floor(Math.random() * 4)] = flag; // استبدال أحد الخيارات بعلم صحيح
   }
 
-  randomFlags.sort(() => Math.random() - 0.5);
+  randomFlags.sort(() => Math.random() - 0.5); // خلط الخيارات عشوائيًا
 
-  optionsContainer.innerHTML = "";
+  optionsContainer.innerHTML = ""; // مسح المحتوى السابق
   randomFlags.forEach(option => {
-    const button = document.createElement("button");
-    button.textContent = option.country;
-    button.addEventListener("click", () => handleAnswer(option.country, button));
-    optionsContainer.appendChild(button);
+    const button = document.createElement("button"); // إنشاء زر لكل خيار
+    button.textContent = option.country; // تعيين اسم الدولة كـ نص للزر
+    button.addEventListener("click", () => handleAnswer(option.country, button)); // إضافة حدث عند الضغط على الزر
+    optionsContainer.appendChild(button); // إضافة الزر إلى الحاوية
   });
 
-  hintContainer.textContent = " ";
+  hintContainer.textContent = " "; // مسح أي تلميحات سابقة
 }
 
+// دالة لعرض رسالة النهاية عند انتهاء اللعبة
 function showEndMessage() {
-  const endTime = Date.now();
+  const endTime = Date.now(); // حفظ وقت النهاية
   const timeSpent = Math.floor((endTime - startTime) / 1000); // حساب الوقت المستغرق بالثواني
   const endMessage = `Game Over! Your score is ${score}.<br>Time spent: ${timeSpent} seconds.<br>Correct Answers: ${correctAnswers}<br>Incorrect Answers: ${incorrectAnswers}`;
-  
-  const modal = document.getElementById("modal");
-  const modalMessage = document.getElementById("modal-message");
-  const modalCloseButton = document.getElementById("modal-close-button");
-  const restartButton = document.createElement("button");
 
-  // إعداد رسالة النهاية
-  modalMessage.innerHTML = endMessage;
-  modal.style.display = "flex"; // عرض الـ modal
+  const modal = document.getElementById("modal"); // العنصر الذي يعرض نافذة النهاية
+  const modalMessage = document.getElementById("modal-message"); // العنصر الذي يعرض الرسالة داخل النافذة
+  const modalCloseButton = document.getElementById("modal-close-button"); // زر إغلاق النافذة
+  const restartButton = document.createElement("button"); // زر إعادة بدء اللعبة
 
-  // إضافة زر إعادة بدء اللعبة
-  restartButton.textContent = "Restart Game";
+  modalMessage.innerHTML = endMessage; // تحديث الرسالة
+  modal.style.display = "flex"; // عرض نافذة النهاية
+
+  restartButton.textContent = "Restart Game"; // نص الزر
   restartButton.style.padding = "10px 20px";
   restartButton.style.backgroundColor = "#007bff";
   restartButton.style.color = "#fff";
@@ -122,119 +134,108 @@ function showEndMessage() {
   restartButton.style.borderRadius = "5px";
   restartButton.style.cursor = "pointer";
   restartButton.addEventListener("click", () => {
-    modal.style.display = "none"; // إخفاء الـ modal
-    startQuiz(); // إعادة تشغيل اللعبة
+    modal.style.display = "none"; // إخفاء النافذة عند إعادة البدء
+    startQuiz(); // إعادة بدء اللعبة
   });
 
-  modalMessage.appendChild(restartButton);
+  modalMessage.appendChild(restartButton); // إضافة زر إعادة البدء إلى الرسالة
 
   modalCloseButton.addEventListener("click", () => {
-    modal.style.display = "none"; // إخفاء الـ modal عند الضغط على زر الإغلاق
-    startQuiz(); // إعادة تشغيل اللعبة عند الإغلاق
+    modal.style.display = "none"; // إخفاء النافذة عند الضغط على زر الإغلاق
+    startQuiz(); // إعادة بدء اللعبة عند الإغلاق
   });
 }
 
+// دالة لتفعيل التلميحات
 hintButton.addEventListener("click", () => {
   if (hintUsageCount > 0) {
-    const correctAnswer = flags[currentFlagIndex].country;
-    hintContainer.textContent = `Hint: The first letter of the country is "${correctAnswer.charAt(0)}"`;
-
-    hintUsageCount--;
+    const correctAnswer = flags[currentFlagIndex].country; // الحصول على الإجابة الصحيحة
+    hintContainer.textContent = `Hint: The first letter of the country is "${correctAnswer.charAt(0)}"`; // عرض التلميح
+    hintUsageCount--; // تقليل عدد التلميحات المتاحة
   } else {
-    hintContainer.textContent = "You have used all your hints!";
+    hintContainer.textContent = "You have used all your hints!"; // إذا تم استخدام جميع التلميحات
   }
 });
 
+// دالة للتعامل مع الإجابة عند اختيار أحد الخيارات
 function handleAnswer(selectedOption, button) {
-  // Disable all buttons after answering
-  const allButtons = optionsContainer.querySelectorAll("button");
-  allButtons.forEach(button => button.disabled = true);
+  const allButtons = optionsContainer.querySelectorAll("button"); // الحصول على جميع الأزرار
+  allButtons.forEach(button => button.disabled = true); // تعطيل الأزرار بعد الإجابة
 
-  const correctAnswer = flags[currentFlagIndex].country;
+  const correctAnswer = flags[currentFlagIndex].country; // الإجابة الصحيحة
 
-  if (selectedOption === correctAnswer) {
-    score++;
-    correctAnswers++;
-    scoreDisplay.textContent = score;
+  if (selectedOption === correctAnswer) { // إذا كانت الإجابة صحيحة
+    score++; // زيادة النقاط
+    correctAnswers++; // زيادة عدد الإجابات الصحيحة
+    scoreDisplay.textContent = score; // تحديث النقاط المعروضة
 
-    if (score === 10) {
-      clearInterval(timer);
-      showEndMessage(); // تنتهي اللعبة إذا وصل اللاعب إلى 10 نقاط
-      return; // خروج من الدالة بعد إنهاء اللعبة
+    if (score === 10) { // إذا وصل اللاعب إلى 10 نقاط
+      clearInterval(timer); // إيقاف المؤقت
+      showEndMessage(); // عرض رسالة النهاية
+      return; // إنهاء الدالة
     }
-    if (correctAnswers === 3) {
-      removeTwoButton.style.display = "block";
-      hintContainer.textContent = "Congratulations! You can now use the hint button!";
-      
-      // اجعل الرسالة تظهر لمدة 3 ثوانٍ فقط
-      setTimeout(() => {
-        if (hintContainer.textContent === "Congratulations! You can now use the hint button!") {
-          hintContainer.textContent = "6564545"; // إخفاء الرسالة بعد 3 ثوانٍ
-        }
-      }, 1000000000);
-    }
-
-     
-    
 
     setTimeout(() => {
-      currentFlagIndex++;
+      currentFlagIndex++; // الانتقال إلى العلم التالي
       if (currentFlagIndex < flags.length) {
-        showFlag();
+        showFlag(); // عرض العلم التالي
       } else {
-        clearInterval(timer);
-        showEndMessage(); // عرض النتيجة والوقت عند نهاية اللعبة
+        clearInterval(timer); // إيقاف المؤقت عند الانتهاء من الأعلام
+        showEndMessage(); // عرض رسالة النهاية
       }
-    }, 500); // Wait for 1 second before showing the next question
-  } else {
-    incorrectAnswers++;
-    if (incorrectAnswers >= 3) {
-      clearInterval(timer);
-      showEndMessage(); // عرض النتيجة والوقت عند نهاية اللعبة
+    }, 500); // الانتظار لمدة 500 ميلي ثانية قبل الانتقال للسؤال التالي
+  } else { // إذا كانت الإجابة خاطئة
+    incorrectAnswers++; // زيادة عدد الإجابات الخاطئة
+    if (incorrectAnswers >= 3) { // إذا وصل عدد الإجابات الخاطئة إلى 3
+      clearInterval(timer); // إيقاف المؤقت
+      showEndMessage(); // عرض رسالة النهاية
     }
     setTimeout(() => {
-      currentFlagIndex++;
+      currentFlagIndex++; // الانتقال إلى العلم التالي
       if (currentFlagIndex < flags.length) {
-        showFlag();
+        showFlag(); // عرض العلم التالي
       } else {
-        clearInterval(timer);
-        showEndMessage();
-        // عرض النتيجة والوقت عند نهاية اللعبة
+        clearInterval(timer); // إيقاف المؤقت عند الانتهاء من الأعلام
+        showEndMessage(); // عرض رسالة النهاية
       }
-    }, 500); // Wait for 1 second before showing the next question
+    }, 500); // الانتظار لمدة 500 ميلي ثانية قبل الانتقال للسؤال التالي
   }
 }
 
+// دالة لإزالة خيارين عشوائيين من الإجابات
 removeTwoButton.addEventListener("click", () => {
-  const correctAnswer = flags[currentFlagIndex].country;
+  const correctAnswer = flags[currentFlagIndex].country; // الحصول على الإجابة الصحيحة
 
-  const incorrectOptions = flags.filter(option => option.country !== correctAnswer);
-  const randomIncorrectOption = incorrectOptions[Math.floor(Math.random() * incorrectOptions.length)];
+  const incorrectOptions = flags.filter(option => option.country !== correctAnswer); // استخراج الخيارات الخاطئة
+  const randomIncorrectOption = incorrectOptions[Math.floor(Math.random() * incorrectOptions.length)]; // اختيار خيار خاطئ عشوائيًا
 
   const remainingOptions = [
     { country: correctAnswer, url: flags[currentFlagIndex].url },
     randomIncorrectOption
   ];
-  remainingOptions.sort(() => Math.random() - 0.5);
+  remainingOptions.sort(() => Math.random() - 0.5); // خلط الخيارات
 
-  optionsContainer.innerHTML = "";
+  optionsContainer.innerHTML = ""; // مسح الخيارات السابقة
   remainingOptions.forEach(option => {
-    const button = document.createElement("button");
-    button.textContent = option.country;
-    button.addEventListener("click", () => handleAnswer(option.country, button));
-    optionsContainer.appendChild(button);
+    const button = document.createElement("button"); // إنشاء زر لكل خيار
+    button.textContent = option.country; // تعيين اسم الدولة كـ نص للزر
+    button.addEventListener("click", () => handleAnswer(option.country, button)); // إضافة حدث عند الضغط على الزر
+    optionsContainer.appendChild(button); // إضافة الزر إلى الحاوية
   });
 
-  removeTwoButton.style.display = "none";
+  removeTwoButton.style.display = "none"; // إخفاء زر إزالة خيارين بعد استخدامه
 });
 
+// إعداد الحاوية للأزرار الخاصة بالتلميحات
 const buttonContainer = document.createElement("div");
 buttonContainer.style.display = "flex";
 buttonContainer.style.justifyContent = "center";
 buttonContainer.style.gap = "10px";
 
+// إدراج الأزرار في الـ DOM
 hintButton.parentNode.insertBefore(buttonContainer, hintButton);
 buttonContainer.appendChild(hintButton);
 buttonContainer.appendChild(removeTwoButton);
 
+// بدء اللعبة
 startQuiz();
