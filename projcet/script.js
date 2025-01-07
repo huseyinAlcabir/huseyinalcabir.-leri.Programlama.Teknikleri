@@ -1,4 +1,4 @@
-// تعريف مصفوفة تحتوي على بيانات الأعلام
+// Define an array containing flag data
 const flags = [
   { country: "Turkey", url: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Flag_of_the_Ottoman_Empire_%281844%E2%80%931922%29.svg" },
   { country: "Qatar", url: "https://upload.wikimedia.org/wikipedia/commons/6/65/Flag_of_Qatar.svg" },
@@ -23,16 +23,16 @@ const flags = [
   { country: "Yemen", url: "https://upload.wikimedia.org/wikipedia/commons/8/89/Flag_of_Yemen.svg" }
 ];
 
-// تعريف المتغيرات الأساسية التي ستستخدم في اللعبة
-let currentFlagIndex = 0; // المؤشر الحالي للعلم الذي يتم عرضه
-let score = 0; // عدد النقاط التي حققها اللاعب
-let timeRemaining = 30; // الوقت المتبقي للعبة
-let timer; // المتغير الذي سيحفظ قيمة المؤقت
-let correctAnswers = 0; // عدد الإجابات الصحيحة
-let incorrectAnswers = 0; // عدد الإجابات الخاطئة
-let startTime; // وقت بدء اللعبة
+// Define basic variables to be used in the game
+let currentFlagIndex = 0; // Current flag index being displayed
+let score = 0; // Player's score
+let timeRemaining = 30; // Time remaining in the game
+let timer; // Variable to hold the timer value
+let correctAnswers = 0; // Number of correct answers
+let incorrectAnswers = 0; // Number of incorrect answers
+let startTime; // Game start time
 
-// العناصر التي سيتم التفاعل معها في الـ HTML
+// HTML elements to interact with
 const flagContainer = document.getElementById("flag-container");
 const optionsContainer = document.getElementById("options-container");
 const hintButton = document.getElementById("hint-button");
@@ -41,92 +41,92 @@ const timerDisplay = document.getElementById("question-time-remaining");
 const scoreDisplay = document.getElementById("score");
 const removeTwoButton = document.getElementById("remove-two-button");
 
-let hintUsageCount = 2; // عدد مرات استخدام التلميحات المتاحة
+let hintUsageCount = 2; // Number of available hints
 
-// دالة لبدء اللعبة
+// Function to start the quiz
 function startQuiz() {
   currentFlagIndex = 0;
   score = 0;
   correctAnswers = 0;
   incorrectAnswers = 0;
-  scoreDisplay.textContent = score; // عرض النقاط الحالية
-  removeTwoButton.style.display = "none"; // إخفاء زر "إزالة خيارين" في البداية
-  resetTimer(); // إعادة تعيين المؤقت
-  startTime = Date.now(); // حفظ الوقت الحالي كبداية للعبة
-  shuffleFlags(); // خلط الأعلام عشوائيًا
-  showFlag(); // عرض العلم الأول
+  scoreDisplay.textContent = score; // Display current score
+  removeTwoButton.style.display = "none"; // Hide the "Remove Two Options" button at the start
+  resetTimer(); // Reset the timer
+  startTime = Date.now(); // Save the current time as the start of the game
+  shuffleFlags(); // Shuffle flags randomly
+  showFlag(); // Show the first flag
 }
 
-// دالة لإعادة تعيين المؤقت
+// Function to reset the timer
 function resetTimer() {
-  clearInterval(timer); // إيقاف أي مؤقت موجود
-  timeRemaining = 25; // تعيين الوقت المتبقي إلى 25 ثانية
-  timerDisplay.textContent = timeRemaining; // تحديث عرض الوقت المتبقي
+  clearInterval(timer); // Stop any existing timer
+  timeRemaining = 25; // Set remaining time to 25 seconds
+  timerDisplay.textContent = timeRemaining; // Update the display of remaining time
 
   timer = setInterval(() => {
-    timeRemaining--; // تقليل الوقت المتبقي ثانية تلو الأخرى
-    timerDisplay.textContent = timeRemaining; // تحديث عرض الوقت المتبقي
+    timeRemaining--; // Decrease remaining time by 1 second
+    timerDisplay.textContent = timeRemaining; // Update the remaining time display
 
-    if (timeRemaining <= 0) { // إذا انتهى الوقت
-      clearInterval(timer); // إيقاف المؤقت
-      showEndMessage(); // عرض رسالة النهاية
+    if (timeRemaining <= 0) { // If time runs out
+      clearInterval(timer); // Stop the timer
+      showEndMessage(); // Show the end message
     }
-  }, 1000); // تكرار كل ثانية
+  }, 1000); // Repeat every second
 }
 
-// دالة لخلط الأعلام عشوائيًا
+// Function to shuffle flags randomly
 function shuffleFlags() {
-  // خلط الأعلام عشوائيًا باستخدام دالة sort و Math.random
+  // Shuffle flags randomly using sort and Math.random
   flags.sort(() => Math.random() - 0.5);
 }
 
-// دالة لعرض العلم الحالي مع خيارات الإجابة
+// Function to show the current flag with answer options
 function showFlag() {
-  const flag = flags[currentFlagIndex]; // الحصول على العلم الحالي
-  flagContainer.innerHTML = `<img src="${flag.url}" alt="Flag">`; // عرض صورة العلم
+  const flag = flags[currentFlagIndex]; // Get the current flag
+  flagContainer.innerHTML = `<img src="${flag.url}" alt="Flag">`; // Display the flag image
 
   const randomFlags = [];
   while (randomFlags.length < 4) {
-    const randomIndex = Math.floor(Math.random() * flags.length); // اختيار عشوائي من الأعلام
+    const randomIndex = Math.floor(Math.random() * flags.length); // Select a random flag
     const randomFlag = flags[randomIndex];
     if (!randomFlags.includes(randomFlag)) {
-      randomFlags.push(randomFlag); // إضافة العلم إذا لم يكن مضافًا من قبل
+      randomFlags.push(randomFlag); // Add the flag if it hasn't been added already
     }
   }
 
-  const correctOption = flag.country; // الإجابة الصحيحة هي اسم الدولة
-  if (!randomFlags.some(f => f.country === correctOption)) { // إذا لم تتضمن الخيارات الإجابة الصحيحة
-    randomFlags[Math.floor(Math.random() * 4)] = flag; // استبدال أحد الخيارات بعلم صحيح
+  const correctOption = flag.country; // The correct answer is the country's name
+  if (!randomFlags.some(f => f.country === correctOption)) { // If the correct answer is not in the options
+    randomFlags[Math.floor(Math.random() * 4)] = flag; // Replace one of the options with the correct flag
   }
 
-  randomFlags.sort(() => Math.random() - 0.5); // خلط الخيارات عشوائيًا
+  randomFlags.sort(() => Math.random() - 0.5); // Shuffle options randomly
 
-  optionsContainer.innerHTML = ""; // مسح المحتوى السابق
+  optionsContainer.innerHTML = ""; // Clear previous options
   randomFlags.forEach(option => {
-    const button = document.createElement("button"); // إنشاء زر لكل خيار
-    button.textContent = option.country; // تعيين اسم الدولة كـ نص للزر
-    button.addEventListener("click", () => handleAnswer(option.country, button)); // إضافة حدث عند الضغط على الزر
-    optionsContainer.appendChild(button); // إضافة الزر إلى الحاوية
+    const button = document.createElement("button"); // Create a button for each option
+    button.textContent = option.country; // Set the country name as the button text
+    button.addEventListener("click", () => handleAnswer(option.country, button)); // Add click event
+    optionsContainer.appendChild(button); // Add the button to the container
   });
 
-  hintContainer.textContent = " "; // مسح أي تلميحات سابقة
+  hintContainer.textContent = " "; // Clear previous hints
 }
 
-// دالة لعرض رسالة النهاية عند انتهاء اللعبة
+// Function to show the end message when the game ends
 function showEndMessage() {
-  const endTime = Date.now(); // حفظ وقت النهاية
-  const timeSpent = Math.floor((endTime - startTime) / 1000); // حساب الوقت المستغرق بالثواني
+  const endTime = Date.now(); // Save the end time
+  const timeSpent = Math.floor((endTime - startTime) / 1000); // Calculate time spent in seconds
   const endMessage = `Game Over! Your score is ${score}.<br>Time spent: ${timeSpent} seconds.<br>Correct Answers: ${correctAnswers}<br>Incorrect Answers: ${incorrectAnswers}`;
 
-  const modal = document.getElementById("modal"); // العنصر الذي يعرض نافذة النهاية
-  const modalMessage = document.getElementById("modal-message"); // العنصر الذي يعرض الرسالة داخل النافذة
-  const modalCloseButton = document.getElementById("modal-close-button"); // زر إغلاق النافذة
-  const restartButton = document.createElement("button"); // زر إعادة بدء اللعبة
+  const modal = document.getElementById("modal"); // Modal element to show end message
+  const modalMessage = document.getElementById("modal-message"); // Element to show message inside modal
+  const modalCloseButton = document.getElementById("modal-close-button"); // Close button for modal
+  const restartButton = document.createElement("button"); // Restart game button
 
-  modalMessage.innerHTML = endMessage; // تحديث الرسالة
-  modal.style.display = "flex"; // عرض نافذة النهاية
+  modalMessage.innerHTML = endMessage; // Update the message
+  modal.style.display = "flex"; // Show the modal
 
-  restartButton.textContent = "Restart Game"; // نص الزر
+  restartButton.textContent = "Restart Game"; // Button text
   restartButton.style.padding = "10px 20px";
   restartButton.style.backgroundColor = "#007bff";
   restartButton.style.color = "#fff";
@@ -134,108 +134,108 @@ function showEndMessage() {
   restartButton.style.borderRadius = "5px";
   restartButton.style.cursor = "pointer";
   restartButton.addEventListener("click", () => {
-    modal.style.display = "none"; // إخفاء النافذة عند إعادة البدء
-    startQuiz(); // إعادة بدء اللعبة
+    modal.style.display = "none"; // Hide modal when restarting
+    startQuiz(); // Restart the game
   });
 
-  modalMessage.appendChild(restartButton); // إضافة زر إعادة البدء إلى الرسالة
+  modalMessage.appendChild(restartButton); // Add restart button to message
 
   modalCloseButton.addEventListener("click", () => {
-    modal.style.display = "none"; // إخفاء النافذة عند الضغط على زر الإغلاق
-    startQuiz(); // إعادة بدء اللعبة عند الإغلاق
+    modal.style.display = "none"; // Hide modal on close
+    startQuiz(); // Restart the game on close
   });
 }
 
-// دالة لتفعيل التلميحات
+// Function to activate hints
 hintButton.addEventListener("click", () => {
   if (hintUsageCount > 0) {
-    const correctAnswer = flags[currentFlagIndex].country; // الحصول على الإجابة الصحيحة
-    hintContainer.textContent = `Hint: The first letter of the country is "${correctAnswer.charAt(0)}"`; // عرض التلميح
-    hintUsageCount--; // تقليل عدد التلميحات المتاحة
+    const correctAnswer = flags[currentFlagIndex].country; // Get the correct answer
+    hintContainer.textContent = `Hint: The first letter of the country is "${correctAnswer.charAt(0)}"`; // Show the hint
+    hintUsageCount--; // Decrease available hints
   } else {
-    hintContainer.textContent = "You have used all your hints!"; // إذا تم استخدام جميع التلميحات
+    hintContainer.textContent = "You have used all your hints!"; // If all hints are used
   }
 });
 
-// دالة للتعامل مع الإجابة عند اختيار أحد الخيارات
+// Function to handle answer selection
 function handleAnswer(selectedOption, button) {
-  const allButtons = optionsContainer.querySelectorAll("button"); // الحصول على جميع الأزرار
-  allButtons.forEach(button => button.disabled = true); // تعطيل الأزرار بعد الإجابة
+  const allButtons = optionsContainer.querySelectorAll("button"); // Get all buttons
+  allButtons.forEach(button => button.disabled = true); // Disable buttons after answering
 
-  const correctAnswer = flags[currentFlagIndex].country; // الإجابة الصحيحة
+  const correctAnswer = flags[currentFlagIndex].country; // Correct answer
 
-  if (selectedOption === correctAnswer) { // إذا كانت الإجابة صحيحة
-    score++; // زيادة النقاط
-    correctAnswers++; // زيادة عدد الإجابات الصحيحة
-    scoreDisplay.textContent = score; // تحديث النقاط المعروضة
+  if (selectedOption === correctAnswer) { // If the answer is correct
+    score++; // Increase score
+    correctAnswers++; // Increase correct answers count
+    scoreDisplay.textContent = score; // Update score display
 
-    if (score === 10) { // إذا وصل اللاعب إلى 10 نقاط
-      clearInterval(timer); // إيقاف المؤقت
-      showEndMessage(); // عرض رسالة النهاية
-      return; // إنهاء الدالة
+    if (score === 10) { // If the player reaches 10 points
+      clearInterval(timer); // Stop the timer
+      showEndMessage(); // Show end message
+      return; // End the function
     }
 
     setTimeout(() => {
-      currentFlagIndex++; // الانتقال إلى العلم التالي
+      currentFlagIndex++; // Move to the next flag
       if (currentFlagIndex < flags.length) {
-        showFlag(); // عرض العلم التالي
+        showFlag(); // Show next flag
       } else {
-        clearInterval(timer); // إيقاف المؤقت عند الانتهاء من الأعلام
-        showEndMessage(); // عرض رسالة النهاية
+        clearInterval(timer); // Stop the timer if all flags are finished
+        showEndMessage(); // Show end message
       }
-    }, 500); // الانتظار لمدة 500 ميلي ثانية قبل الانتقال للسؤال التالي
-  } else { // إذا كانت الإجابة خاطئة
-    incorrectAnswers++; // زيادة عدد الإجابات الخاطئة
-    if (incorrectAnswers >= 3) { // إذا وصل عدد الإجابات الخاطئة إلى 3
-      clearInterval(timer); // إيقاف المؤقت
-      showEndMessage(); // عرض رسالة النهاية
+    }, 500); // Wait for 500 milliseconds before showing next flag
+  } else { // If the answer is incorrect
+    incorrectAnswers++; // Increase incorrect answers count
+    if (incorrectAnswers >= 3) { // If 3 incorrect answers are reached
+      clearInterval(timer); // Stop the timer
+      showEndMessage(); // Show end message
     }
     setTimeout(() => {
-      currentFlagIndex++; // الانتقال إلى العلم التالي
+      currentFlagIndex++; // Move to the next flag
       if (currentFlagIndex < flags.length) {
-        showFlag(); // عرض العلم التالي
+        showFlag(); // Show next flag
       } else {
-        clearInterval(timer); // إيقاف المؤقت عند الانتهاء من الأعلام
-        showEndMessage(); // عرض رسالة النهاية
+        clearInterval(timer); // Stop the timer if all flags are finished
+        showEndMessage(); // Show end message
       }
-    }, 500); // الانتظار لمدة 500 ميلي ثانية قبل الانتقال للسؤال التالي
+    }, 500); // Wait for 500 milliseconds before showing next flag
   }
 }
 
-// دالة لإزالة خيارين عشوائيين من الإجابات
+// Function to remove two random incorrect options
 removeTwoButton.addEventListener("click", () => {
-  const correctAnswer = flags[currentFlagIndex].country; // الحصول على الإجابة الصحيحة
+  const correctAnswer = flags[currentFlagIndex].country; // Get the correct answer
 
-  const incorrectOptions = flags.filter(option => option.country !== correctAnswer); // استخراج الخيارات الخاطئة
-  const randomIncorrectOption = incorrectOptions[Math.floor(Math.random() * incorrectOptions.length)]; // اختيار خيار خاطئ عشوائيًا
+  const incorrectOptions = flags.filter(option => option.country !== correctAnswer); // Get incorrect options
+  const randomIncorrectOption = incorrectOptions[Math.floor(Math.random() * incorrectOptions.length)]; // Select a random incorrect option
 
   const remainingOptions = [
     { country: correctAnswer, url: flags[currentFlagIndex].url },
     randomIncorrectOption
   ];
-  remainingOptions.sort(() => Math.random() - 0.5); // خلط الخيارات
+  remainingOptions.sort(() => Math.random() - 0.5); // Shuffle options
 
-  optionsContainer.innerHTML = ""; // مسح الخيارات السابقة
+  optionsContainer.innerHTML = ""; // Clear previous options
   remainingOptions.forEach(option => {
-    const button = document.createElement("button"); // إنشاء زر لكل خيار
-    button.textContent = option.country; // تعيين اسم الدولة كـ نص للزر
-    button.addEventListener("click", () => handleAnswer(option.country, button)); // إضافة حدث عند الضغط على الزر
-    optionsContainer.appendChild(button); // إضافة الزر إلى الحاوية
+    const button = document.createElement("button"); // Create a button for each option
+    button.textContent = option.country; // Set the country name as the button text
+    button.addEventListener("click", () => handleAnswer(option.country, button)); // Add click event
+    optionsContainer.appendChild(button); // Add the button to the container
   });
 
-  removeTwoButton.style.display = "none"; // إخفاء زر إزالة خيارين بعد استخدامه
+  removeTwoButton.style.display = "none"; // Hide the "Remove Two Options" button after use
 });
 
-// إعداد الحاوية للأزرار الخاصة بالتلميحات
+// Set up the container for hint buttons
 const buttonContainer = document.createElement("div");
 buttonContainer.style.display = "flex";
 buttonContainer.style.justifyContent = "center";
 buttonContainer.style.gap = "10px";
 
-// إدراج الأزرار في الـ DOM
+// Insert the buttons into the DOM
 hintButton.parentNode.insertBefore(buttonContainer, hintButton);
 buttonContainer.appendChild(hintButton);
 buttonContainer.appendChild(removeTwoButton);
 
-// بدء اللعبة
+// Start the game
 startQuiz();
