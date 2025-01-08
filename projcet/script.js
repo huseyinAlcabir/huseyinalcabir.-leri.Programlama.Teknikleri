@@ -31,6 +31,8 @@ let timer; // Variable to hold the timer value
 let correctAnswers = 0; // Number of correct answers
 let incorrectAnswers = 0; // Number of incorrect answers
 let startTime; // Game start time
+let hintUsageCount = 2; // Number of available hints
+let removeTwoUsed = false; // Track if the "Remove Two" button has been used
 
 // HTML elements to interact with
 const flagContainer = document.getElementById("flag-container");
@@ -41,8 +43,6 @@ const timerDisplay = document.getElementById("question-time-remaining");
 const scoreDisplay = document.getElementById("score");
 const removeTwoButton = document.getElementById("remove-two-button");
 
-let hintUsageCount = 2; // Number of available hints
-
 // Function to start the quiz
 function startQuiz() {
   currentFlagIndex = 0;
@@ -50,34 +50,17 @@ function startQuiz() {
   correctAnswers = 0;
   incorrectAnswers = 0;
   scoreDisplay.textContent = score; // Display current score
-  removeTwoButton.style.display = "none"; // Hide the "Remove Two Options" button at the start
+  removeTwoButton.style.display = "block"; // Show the "Remove Two Options" button at the start
+  removeTwoUsed = false; // Reset "Remove Two" usage
   resetTimer(); // Reset the timer
   startTime = Date.now(); // Save the current time as the start of the game
   shuffleFlags(); // Shuffle flags randomly
   showFlag(); // Show the first flag
 }
 
-// Function to reset the timer
-function resetTimer() {
-  clearInterval(timer); // Stop any existing timer
-  timeRemaining = 25; // Set remaining time to 25 seconds
-  timerDisplay.textContent = timeRemaining; // Update the display of remaining time
-
-  timer = setInterval(() => {
-    timeRemaining--; // Decrease remaining time by 1 second
-    timerDisplay.textContent = timeRemaining; // Update the remaining time display
-
-    if (timeRemaining <= 0) { // If time runs out
-      clearInterval(timer); // Stop the timer
-      showEndMessage(); // Show the end message
-    }
-  }, 1000); // Repeat every second
-}
-
 // Function to shuffle flags randomly
 function shuffleFlags() {
-  // Shuffle flags randomly using sort and Math.random
-  flags.sort(() => Math.random() - 0.5);
+  flags.sort(() => Math.random() - 0.5); // Shuffle flags randomly
 }
 
 // Function to show the current flag with answer options
@@ -109,51 +92,25 @@ function showFlag() {
     optionsContainer.appendChild(button); // Add the button to the container
   });
 
-  hintContainer.textContent = " "; // Clear previous hints
+  hintContainer.textContent = ""; // Clear previous hints
 }
 
-// Function to show the end message when the game ends
-function showEndMessage() {
-  const endTime = Date.now(); // Save the end time
-  const timeSpent = Math.floor((endTime - startTime) / 1000); // Calculate time spent in seconds
-  const endMessage = `Game Over! Your score is ${score}.<br>Time spent: ${timeSpent} seconds.<br>Correct Answers: ${correctAnswers}<br>Incorrect Answers: ${incorrectAnswers}`;
-
-  const modal = document.getElementById("modal"); // Modal element to show end message
-  const modalMessage = document.getElementById("modal-message"); // Element to show message inside modal
-  const modalCloseButton = document.getElementById("modal-close-button"); // Close button for modal
-  const restartButton = document.createElement("button"); // Restart game button
-
-  modalMessage.innerHTML = endMessage; // Update the message
-  modal.style.display = "flex"; // Show the modal
-
-  restartButton.textContent = "Restart Game"; // Button text
-  restartButton.style.padding = "10px 20px";
-  restartButton.style.backgroundColor = "#007bff";
-  restartButton.style.color = "#fff";
-  restartButton.style.border = "none";
-  restartButton.style.borderRadius = "5px";
-  restartButton.style.cursor = "pointer";
-  restartButton.addEventListener("click", () => {
-    modal.style.display = "none"; // Hide modal when restarting
-    startQuiz(); // Restart the game
-  });
-
-  modalMessage.appendChild(restartButton); // Add restart button to message
-
-  modalCloseButton.addEventListener("click", () => {
-    modal.style.display = "none"; // Hide modal on close
-    startQuiz(); // Restart the game on close
-  });
-}
-
-// Function to activate hints
-hintButton.addEventListener("click", () => {
-  if (hintUsageCount > 0) {
+// Function to remove two incorrect options
+removeTwoButton.addEventListener("click", () => {
+  if (!removeTwoUsed) {
     const correctAnswer = flags[currentFlagIndex].country; // Get the correct answer
-    hintContainer.textContent = `Hint: The first letter of the country is "${correctAnswer.charAt(0)}"`; // Show the hint
-    hintUsageCount--; // Decrease available hints
-  } else {
-    hintContainer.textContent = "You have used all your hints!"; // If all hints are used
+    const buttons = Array.from(optionsContainer.querySelectorAll("button")); // Get all option buttons
+
+    // Filter out buttons that are incorrect
+    const incorrectButtons = buttons.filter(button => button.textContent !== correctAnswer);
+
+    // Randomly select two incorrect buttons to remove
+    const buttonsToRemove = incorrectButtons.slice(0, 2);
+
+    buttonsToRemove.forEach(button => button.remove()); // Remove the selected buttons
+
+    removeTwoButton.style.display = "none"; // Hide the "Remove Two Options" button
+    removeTwoUsed = true; // Mark as used
   }
 });
 
@@ -200,42 +157,7 @@ function handleAnswer(selectedOption, button) {
       }
     }, 500); // Wait for 500 milliseconds before showing next flag
   }
-}
-
-// Function to remove two random incorrect options
-removeTwoButton.addEventListener("click", () => {
-  const correctAnswer = flags[currentFlagIndex].country; // Get the correct answer
-
-  const incorrectOptions = flags.filter(option => option.country !== correctAnswer); // Get incorrect options
-  const randomIncorrectOption = incorrectOptions[Math.floor(Math.random() * incorrectOptions.length)]; // Select a random incorrect option
-
-  const remainingOptions = [
-    { country: correctAnswer, url: flags[currentFlagIndex].url },
-    randomIncorrectOption
-  ];
-  remainingOptions.sort(() => Math.random() - 0.5); // Shuffle options
-
-  optionsContainer.innerHTML = ""; // Clear previous options
-  remainingOptions.forEach(option => {
-    const button = document.createElement("button"); // Create a button for each option
-    button.textContent = option.country; // Set the country name as the button text
-    button.addEventListener("click", () => handleAnswer(option.country, button)); // Add click event
-    optionsContainer.appendChild(button); // Add the button to the container
-  });
-
-  removeTwoButton.style.display = "none"; // Hide the "Remove Two Options" button after use
 });
-
-// Set up the container for hint buttons
-const buttonContainer = document.createElement("div");
-buttonContainer.style.display = "flex";
-buttonContainer.style.justifyContent = "center";
-buttonContainer.style.gap = "10px";
-
-// Insert the buttons into the DOM
-hintButton.parentNode.insertBefore(buttonContainer, hintButton);
-buttonContainer.appendChild(hintButton);
-buttonContainer.appendChild(removeTwoButton);
 
 // Start the game
 startQuiz();
